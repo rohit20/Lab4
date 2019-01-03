@@ -1,0 +1,610 @@
+Lab 4. Database Objects 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+Goals 
+Following set of questions are designed to implement the following concepts 
+->Creating Database objects like tables, views , etc
+->Modifying Database objects
+->Deleting Database objects
+->Usage of Data Dictionary tables 
+
+4.1: Database Objects:
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+1. Create the Customer table with the following columns.
+  
+Customerid Number(5) 
+CustomerName Number(10) 
+Address1 Varchar2(30)
+Address2  Varchar2(30) 
+
+QUERY:
+
+SQL> create table customer(customerid Number(5),customerName Number(10),Address1 varchar2(30),Address2 Number(10));
+
+Table created.
+
+SQL> desc customer;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUSTOMERID                                         NUMBER(5)
+ CUSTOMERNAME                                       NUMBER(10)
+ ADDRESS1                                           VARCHAR2(30)
+ ADDRESS2                                           NUMBER(10)
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2. Modify the Customer table CustomerName column of datatype with Varchar2(30). CustomerName should not accept Nulls. 
+
+QUERY:
+
+
+SQL> alter table customer modify (customerName varchar2(30));
+
+Table altered.
+
+SQL> desc customer;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUSTOMERID                                         NUMBER(5)
+ CUSTOMERNAME                                       VARCHAR2(30)
+ ADDRESS1                                           VARCHAR2(30)
+ ADDRESS2                                           NUMBER(10)
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+3. Add the following Columns to the Customer table.  
+Gender  Varchar2(1),Age  Number(3),PhoneNo Number(10) 
+
+QUERY:
+
+SQL> alter table customer add(Gender varchar2(1),Age Number(3),PhoneNo number(10));
+
+Table altered.
+
+SQL> desc customer;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUSTOMERID                                         NUMBER(5)
+ CUSTOMERNAME                                       VARCHAR2(30)
+ ADDRESS1                                           VARCHAR2(30)
+ ADDRESS2                                           NUMBER(10)
+ GENDER                                             VARCHAR2(1)
+ AGE                                                NUMBER(3)
+ PHONENO                                            NUMBER(10)
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+4. Insert rows with the following data in to the Customer table.
+Insert into customer values: (1000, ‘Allen’, ‘#115 Chicago’, ‘#115 Chicago’, ‘M’, ‘25, 7878776’) 
+In similar manner, add the below records to the Customer table:
+ -> 1000, Allen, #115 Chicago, #115 Chicago, M, 25, 7878776
+ -> 1001, George, #116 France, #116 France, M, 25, 434524
+ -> 1002, Becker, #114 New York, #114 New York, M, 45, 43152
+
+QUERY:
+
+SQL> alter table customer modify(address2 varchar2(21));
+
+Table altered.
+
+SQL> insert into customer values(1000, 'Allen', '#115 Chicago', '#115 Chicago', 'M', 25, 7878776);
+
+1 row created.
+
+SQL> insert into customer values(1001,'George','#116 France','#116 France', 'M', 25, '434524');
+
+1 row created.
+
+SQL> insert into customer values(1002, 'Becker', '#114 New York', '#114 New York', 'M', 45, 43152);
+
+1 row created.
+
+SQL> select * from customer;
+
+CUSTOMERID CUSTOMERNAME                   ADDRESS1
+---------- ------------------------------ ------------------------------
+ADDRESS2              G        AGE    PHONENO
+--------------------- - ---------- ----------
+      1000 Allen                          #115 Chicago
+#115 Chicago          M         25    7878776
+
+      1001 George                         #116 France
+#116 France           M         25     434524
+
+      1002 Becker                         #114 New York
+#114 New York         M         45      43152
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+5.Add the Primary key constraint for Customerld with the name Custld_Prim. 
+QUERY:
+SQL>  alter table customer add constraint Custld_Prim primary key(CustomerId);
+
+Table altered.
+
+SQL> select * from customer;
+
+CUSTOMERID CUSTOMERNAME                   ADDRESS1
+---------- ------------------------------ ------------------------------
+ADDRESS2              G        AGE    PHONENO
+--------------------- - ---------- ----------
+      1000 Allen                          #115 Chicago
+#115 Chicago          M         25    7878776
+
+      1001 George                         #116 France
+#116 France           M         25     434524
+
+      1002 Becker                         #114 New York
+#114 New York         M         45      43152
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+6.Insert the row given below in the Customer table and see the message generated by the Oracle server. 
+ 1002, John, #114 Chicago, #114 Chicago, M, 45, 439525 
+QUERY:insert into customer values(1002,'john','#114 chicago','#114 chicago','M',45,439525);
+
+
+SQL> insert into customer values(1002,'john','#114 chicago','#114 chicago','M',45,439525);
+insert into customer values(1002,'john','#114 chicago','#114 chicago','M',45,439525)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.CUSTLD_PRIM) violated
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+7.Disable the constraint on CustomerId, and insert the following data:
+ ? 1002, Becker, #114 New York, #114 New york , M, 45, 431525
+ ? 1003, Nanapatekar, #115 India, #115 India , M, 45, 431525 
+
+QUERY: alter table customer disable constraint Custld_Prim;
+
+Table altered.
+  SQL> insert into customer values(1002, 'Becker', '#114 New York', '#114 New York', 'M', 45, 43152);
+
+1 row created.
+
+SQL> insert into customer values(1002, 'Nanapatekar', '#115 India', '#115 India', 'M', 45, 431525);
+
+1 row created.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+8.Enable the constraint on CustomerId of the Customer table, and see the message generated by the Oracle server. 
+QUERY:alter table customer enable CustLd_Prim; 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+9.Drop the constraint Custld_Prim on CustomerId and insert the following Data. Alter Customer table, drop constraint Custid_Prim.
+? 1002, Becker, #114 New York, #114 New york , M, 45, 431525, 15000.50 
+? 1003, Nanapatekar, #115 India, #115 India , M, 45, 431525, 20000.50 
+QUERY: 
+SQL>   alter table customer DROP constraint Custld_Prim;
+
+Table altered.
+
+
+SQL> insert into customer values(1002, 'Becker', '#114 New York', '#114 New York', 'M', 45, 43152);
+
+1 row created.
+
+SQL> insert into customer values(1002, 'Nanapatekar', '#115 India', '#115 India', 'M', 45, 431525);
+
+1 row created.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+10.Delete all the existing rows from Customer table, and let the structure remain itself using TRUNCATE statement
+QUERY:
+       delete from customer;
+
+11 rows deleted.
+
+SQL> truncate table customer;
+
+Table truncated.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+11. In the Customer table, add a column E_mail. 
+QUERY:
+ 
+SQL> alter table customer add(E_mail VARCHAR2(30));
+
+Table altered.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+12.Drop the E_mail column from Customer table
+QUERY:
+SQL> alter table customer drop column E_mail;
+
+Table altered.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+13.Add a new column EmailId to Customer table.  
+ QUERY:
+ 
+SQL> alter table customer add(EmailId VARCHAR2(30));
+
+Table altered.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+14. Mark EmailId column as unused before dropping it. 
+QUERY: alter table customer set unused(EmailId);
+Table altered.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+15.Drop the unused EmailId column from the Customer table.  
+ QUERY:
+
+SQL> alter table customer drop unused columns;
+
+Table altered.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+16.Define the COMMENT ‘Customers Details’ for Customer table. 
+QUERY:
+ comment on table customer IS 'Customer Details';
+
+Comment created.
+
+SQL> desc customer;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUSTOMERID                                         NUMBER(5)
+ CUSTOMERNAME                                       VARCHAR2(30)
+ ADDRESS1                                           VARCHAR2(30)
+ ADDRESS2                                           VARCHAR2(21)
+ GENDER                                             VARCHAR2(1)
+ AGE                                                NUMBER(3)
+ PHONENO                                            NUMBER(10)
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+17. Use Data Dictionary USER_TAB_COMMENTS to view the created comment.  
+ 
+SQL> select * from user_tab_comments;
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+18. Define the COMMENT ‘Personal Contact no’ for the phoneno column of the Customer table.  
+ QUERY: comment on column customer.phoneno is 'Personal Contact No';
+
+Comment created.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+19.Use Data Dictionary USER_COL_COMMENTS to view the created comment. 
+QUERY:select * from USER_COL_COMMENTS;
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+20. Create the Suppliers table based on the structure of the Customer table.
+ Include only the CustomerId, CustomerName, Address1, Address2, and phoneno columns. 
+ Name the columns in the new table as SuppID, SName, Addr1, Addr2, and Contactno respectively
+QUERY:
+SQL> create table suppliers(suppid number(5),SName varchar2(20),Addr1 varchar2(50),Addr2 varchar2(50),contactno number(10));
+
+Table created.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+21.Drop the above table and recreate the following table with the name CustomerMaster.  
+CustomerId Number(5) Primary key(Name of constraint is CustId_PK)
+ CustomerName Varchar2(30) Not Null 
+Addressl Varchar2(30) Not Null 
+Address2 Varchar2(30) 
+ender  Varchar2(l) 
+Age  Number(3) 
+PhoneNo Number(10)
+QUERY:
+
+
+SQL> create table CustomerMaster(CustomerId Number(5) primary key,CustomerName varchar2(30) NOT NULL,Address1 varchar2(30) NOT NULL,Address2 varchar2(30),Gender varchar2(21),Age Number(21),PhoneNo number(21));
+
+Table created.
+
+SQL> alter table CustomerMaster ADD CONSTRAINT CustId_PK PRIMARY KEY(CustomerId);
+
+Table altered.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+22.Create the AccountsMaster table with the following Columns. 
+Use sequence to generate Account number 
+Customerld  Number(5)
+AccountNumber  Number(10,2) Primary key(Name of constraint is Acc_PK) 
+AccountType  Char(3) 
+LedgerBalance  Number(10,2) Not Null 
+QUERY:
+SQL> create table AccountMaster(CustomerId Number(5),AccountNumber Number(10,2),AccountType Char(3),LedgerBalance Number(10,2)not Null);
+
+Table created.
+
+SQL> alter table AccountMaster ADD CONSTRAINT Acc_PK PRIMARY KEY(AccountNumber);
+
+Table altered.
+
+SQL> create sequence seq_ans MINVALUE 101 MAXVALUE 10000 START WITH 101 INCREMENT BY 1 CACHE 101;
+
+Sequence created.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+23. Relate AccountsMaster table and CustomerMaster table through Customerld column with the constraint name Cust_acc
+QUERY:
+SQL> Alter table Accountmaster ADD constraint ass_fk FOREIGN KEY(customerid) REFERENCES customermaster(customerid);
+
+Table altered.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+24.. Insert the following rows to the CustomerMaster table:
+ ? 1000, Allen, #115 Chicago, #115 Chicago, M, 25, 7878776 
+ ? 1001, George, #116 France, #116 France, M, 25, 434524
+ ? 1002, Becker, #114 New York, #114 New York, M, 45, 431525 
+QUERY:
+
+SQL> Insert into customermaster values(1000,'Allen','#115 Chicago','#115 Chicago','M', 25, 7878776);
+
+1 row created.
+	 
+SQL> Insert into customermaster values(1001,'George','#116 France','#116 France','M', 25, 4345240);
+
+1 row created.
+
+SQL>   Insert into customermaster values(1002,'Becker','#114 New York','#114 New York','M', 45, 4315250);
+
+1 row created.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+25. Modify the AccountMaster table with the Check constraint to ensure AccountType should be either NRI or IND. 
+QUERY: 
+SQL> alter table Accountmaster add constraint ck_ac check(AccountType='NRI' or AccountType='IND');
+
+Table altered.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+26.Insert 5 rows into the AccountsMaster table: 
+QUERY:
+
+SQL> insert into AccountMaster values(1002,654321,'IND',10000);
+
+1 row created.
+
+SQL> insert into AccountMaster values(1001,432165,'NRI',12000);
+
+1 row created.
+SQL> insert into AccountMaster values(1002,65400,'NRI',10000);
+
+1 row created.
+
+SQL> insert into AccountMaster values(1000,45400,'IND',19000);
+
+1 row created.
+
+
+SQL> insert into AccountMaster values(1000,43105,'NRI',12008);
+
+1 row created.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+27.  Modify the AccountsMaster table keeping a Check constraint with the name Balance_Check for the Minimum Balance which should be greater than 5000. 
+QUERY:
+SQL> alter table Accountmaster add constraint Balance_enq check(ledgerbalance > 5000);
+
+Table altered.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+28.  Modify the AccountsMaster table such that if Customer is deleted from Customer table then all his details should be deleted from AccountsMaster table.  
+ QUERY:
+
+SQL> delete from accountmaster where customerid=1001;
+
+1 row deleted.
+
+SQL> delete from customermaster where customerid=1001;
+
+1 row deleted.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+29.Create Backup copy for the AccountsMaster table with the name ‘AccountDetails’.  
+ QUERY:
+SQL> Create table accountdetails as select * from Accountmaster;
+
+Table created.
+
+SQL> select * from accountdetails;
+
+CUSTOMERID ACCOUNTNUMBER ACC LEDGERBALANCE
+---------- ------------- --- -------------
+      1002        654321 IND         10000
+      1000        543216 IND         20000
+      1000         45400 IND         19000
+      1000         43105 NRI         12008
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+30.Change the name of the AccountDetails table to ‘BackUpTable’ table
+QUERY:
+SQL> alter table  accountdetails rename to backuptable;
+
+Table altered.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+31. Create a view ‘Acc_view’ with columns Customerld, CustomerName, AccountNumber, AccountType, and LedgerBalance from AccountsMaster.
+ In the view Acc_view, the column names should be CustomerCode, AccountHolderName, AccountNumber, Type, and Balance for the respective columns
+ from AccountsMaster table.  
+ QUERY: 
+SQL> CREATE VIEW Acc_view AS SELECT Customerid,Accountnumber,AccountType,ledgerBalance from accountmaster;
+
+View created.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+32.Create a view on AccountsMaster table with name vAccs_Dtls. This view should list all customers whose AccountType is ‘IND’ and their balance
+ amount should not be less than 10000. Using this view any DML operation should not violate the view conditions.  
+QUERY:
+
+SQL>create view vAccs_Dtls as select Accounttype,ledgerbalance from Accountmaster where accounttype = 'IND' and ledgerbalance < 10000;
+
+View created.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Hint: Use the With Check Option constraint. 
+ 
+33.Create a view accsvw10 which will not allow DML statement against it. 
+QUERY:
+
+SQL> create view accsvw10 as select a.customerid,a.customername from customermaster a inner join accountmaster m on a.customerid=m.customerid with check option;
+
+View created.
+
+SQL> insert into accsvw10 values(1006,'dev');
+insert into accsvw10 values(1006,'dev')
+*
+ERROR at line 1:
+ORA-01779: cannot modify a column which maps to a non key-preserved table
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+34. Display the department from Staff table which has the highest salary by using Inline View.  
+ QUERY:
+SQL> select * from (select deptno, count(*) emp_count from emp group by deptno) emp,department_masters where department_masters.dept_code = emp.deptno;
+
+    DEPTNO  EMP_COUNT  DEPT_CODE
+---------- ---------- ----------
+DEPT_NAME
+--------------------------------------------------
+        10          3         10
+INFORMATION TECHNOLOGY
+
+        20          5         20
+Electricals
+
+        30          6         30
+Electronics
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+35. List the top two highest earning employees in each department. 
+QUERY:
+SELECT empno,ename,sal from(select empno,ename,sal from emp order by sal desc) where rownum <=2;
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+36.Create a Sequence with the name Seq_Dept on Deptno column of Dept table. It should start from 40 and stop at 200. 
+Increment parameter for the sequence Seq_Dept should be in step of 10.  
+QUERY: 
+SQL> create sequence seq_dept minvalue 40 start with 40 increment by 10 MAXVALUE 200 cache 40;
+
+Sequence created.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+37.. Insert three sample rows by using the above sequence in Dept table
+QUERY:
+
+SQL> insert into department_masters values(80,'civil');
+
+1 row created.
+
+SQL> insert into department_masters values(90,'Chemical');
+
+1 row created.
+
+SQL> insert into department_masters values(60,'computers');
+
+1 row created.
+
+SQL> select * from department_masters;
+
+ DEPT_CODE DEPT_NAME
+---------- --------------------------------------------------
+        10 INFORMATION TECHNOLOGY
+        20 Electricals
+        30 Electronics
+        40 Mechanics
+        50 Robotics
+        70 Personnel
+        80 civil
+        90 Chemical
+        60 computers
+
+9 rows selected.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+38.. Alter the above specified sequence with an increment by 5.  
+ QUERY:
+SQL> alter sequence seq_dept increment by 5 minvalue 0;
+
+Sequence altered.
+
+SQL> select * from departmentmaster;
+
+    DEPTNO DNAME                     LOCATION
+---------- ------------------------- -------------------------
+        40 MARKETING                 NEW DELHI
+        50 SALES                     chennai
+        60 RESEARCH                  BOSTON
+
+SQL> insert into departmentmaster  values(seq_dept.NEXTVAL,'Testing','Mumbai');
+
+1 row created.
+
+SQL> select * from departmentmaster;
+
+    DEPTNO DNAME                     LOCATION
+---------- ------------------------- -------------------------
+        40 MARKETING                 NEW DELHI
+        50 SALES                     chennai
+        60 RESEARCH                  BOSTON
+        65 Testing                   Mumbai
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+39. Drop the Seq_Dept sequence.  
+ QUERY:
+
+SQL> DROP sequence seq_dept;
+
+Sequence dropped.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+40.Create a Unique index with the name No_Name on DeptNo and Dname of Dept table.  
+QUERY: 
+
+SQL> create index No_Name on departmentmaster(deptno,dname);
+
+Index created.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+41.Get information on the index No_Name from the Data Dictionary.  
+ QUERY:
+SQL> select * from departmentmaster;
+
+    DEPTNO DNAME                     LOCATION
+---------- ------------------------- -------------------------
+        40 MARKETING                 NEW DELHI
+        50 SALES                     chennai
+        60 RESEARCH                  BOSTON
+        65 Testing                   Mumbai
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+42.Create public synonym synEmp for the EMP table.  
+ QUERY:
+
+SQL> create synonym synEmp for emp;
+
+Synonym created.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+43. Get Information on synonym synEmp from the Data Dictionary.  
+QUERY:
+
+SQL> select * from synEmp;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM
+---------- ---------- --------- ---------- --------- ---------- ----------
+    DEPTNO
+----------
+      7369 SMITH      CLERK           7902 17-DEC-80        800
+        20
+
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300
+        30
+
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500
+        30
+
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM
+---------- ---------- --------- ---------- --------- ---------- ----------
+    DEPTNO
+----------
+      7566 JONES      MANAGER         7839 02-APR-81       2975
+        20
+
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400
+        30
+
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850
+        30
+
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM
+---------- ---------- --------- ---------- --------- ---------- ----------
+    DEPTNO
+----------
+      7782 CLARK      MANAGER         7839 09-JUN-81       2450
+        10
+
+      7788 SCOTT      ANALYST         7566 09-DEC-82       3000
+        20
+
+      7839 KING       PRESIDENT            17-NOV-81       5000
+        10
+
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM
+---------- ---------- --------- ---------- --------- ---------- ----------
+    DEPTNO
+----------
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0
+        30
+
+      7876 ADAMS      CLERK           7788 12-JAN-83       1100
+        20
+
+      7900 JAMES      CLERK           7698 03-DEC-81        950
+        30
+
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM
+---------- ---------- --------- ---------- --------- ---------- ----------
+    DEPTNO
+----------
+      7902 FORD       ANALYST         7566 03-DEC-81       3000
+        20
+
+      7934 MILLER     CLERK           7782 23-JAN-82       1300
+        10
+
+
+14 rows selected.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
